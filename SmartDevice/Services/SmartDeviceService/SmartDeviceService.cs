@@ -52,6 +52,7 @@ namespace SmartDevice.Services.SmartDeviceService
                 return NotFound("There is no such device!");
 
             device.Name = smartDeviceModel.Name;
+            device.Type = smartDeviceModel.Type;
             device.IsOn = smartDeviceModel.IsOn;
 
             await _context.SaveChangesAsync();
