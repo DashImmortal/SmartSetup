@@ -12,6 +12,7 @@ namespace SmartDevice.Services.SmartDeviceService
         Task<ActionResult<SmartDeviceModel>> GetSingleSmartDevice(int id);
         Task<ActionResult<SmartDeviceModel>> AddSmartDeviceModel(SmartDeviceModel smartDeviceModel);
         Task<IActionResult> UpdateSmartDeviceModel(int id, SmartDeviceModel smartDeviceModel);
+        Task<IActionResult> ToggleSmartDeviceModel(int id);
         Task<IActionResult> DeleteSmartDeviceModel(int id);
-    }
+    }   
 }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SmartDevice.Migrations.Rooms
+namespace SmartDevice.Migrations
 {
-    public partial class MyMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace SmartDevice.Migrations.Rooms
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -20,20 +20,21 @@ namespace SmartDevice.Migrations.Rooms
                 });
 
             migrationBuilder.CreateTable(
-                name: "SmartDeviceModel",
+                name: "SmartDevices",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     IsOn = table.Column<bool>(type: "bit", nullable: false),
                     RoomModelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SmartDeviceModel", x => x.Id);
+                    table.PrimaryKey("PK_SmartDevices", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SmartDeviceModel_Rooms_RoomModelId",
+                        name: "FK_SmartDevices_Rooms_RoomModelId",
                         column: x => x.RoomModelId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -41,15 +42,15 @@ namespace SmartDevice.Migrations.Rooms
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_SmartDeviceModel_RoomModelId",
-                table: "SmartDeviceModel",
+                name: "IX_SmartDevices_RoomModelId",
+                table: "SmartDevices",
                 column: "RoomModelId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "SmartDeviceModel");
+                name: "SmartDevices");
 
             migrationBuilder.DropTable(
                 name: "Rooms");

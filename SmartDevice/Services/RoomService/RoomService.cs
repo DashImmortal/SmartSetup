@@ -3,19 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using SmartDevice.Data;
 using SmartDevice.Models;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SmartDevice.Controllers;
 
 namespace SmartDevice.Services.RoomService
 {
     public class RoomService : IRoomService
     {
-        private readonly RoomsContext _context;
+        private readonly SmartSetupContext _context;
 
-        public RoomService(RoomsContext context)
+        public RoomService(SmartSetupContext context)
         {
             _context = context;
         }
@@ -25,13 +22,6 @@ namespace SmartDevice.Services.RoomService
             var rooms = await _context.Rooms.ToListAsync();
             if (rooms == null || rooms.Count == 0)
                 return new NotFoundResult();
-            foreach (var room in rooms)
-            {
-                if (room.SmartDevicesSerialized == null)
-                    continue;
-                room.SmartDevices =
-                    JsonConvert.DeserializeObject<ObservableCollection<SmartDeviceModel>>(room.SmartDevicesSerialized);
-            }
             
             return rooms;
         }
@@ -41,13 +31,8 @@ namespace SmartDevice.Services.RoomService
             var roomModel = await _context.Rooms.FindAsync(id);
 
             if (roomModel == null)
-            {
                 return new NotFoundResult();
-                //return NotFound();
-            }
-
-            roomModel.SmartDevices =
-                JsonConvert.DeserializeObject<ObservableCollection<SmartDeviceModel>>(roomModel.SmartDevicesSerialized);
+            
             return roomModel;
         }
         
@@ -60,7 +45,7 @@ namespace SmartDevice.Services.RoomService
                 return new NotFoundResult();
 
             room.Name = roomModel.Name;
-            room.SmartDevicesSerialized = JsonConvert.SerializeObject(roomModel.SmartDevices);
+            room.SmartDevices = roomModel.SmartDevices;
             try
             {
                 await _context.SaveChangesAsync();
@@ -68,39 +53,30 @@ namespace SmartDevice.Services.RoomService
             catch (DbUpdateConcurrencyException)
             {
                 if (!RoomModelExists(id))
-                {
                     return new NotFoundResult();
-                    //return NotFound();
-                }
             }
 
             return new OkResult();
-            //return new Ok();
         }
         
         public async Task<ActionResult<RoomModel>> AddRoom(RoomModel roomModel)
         {
             _context.Rooms.Add(roomModel);
-            var devices = JsonConvert.SerializeObject(roomModel.SmartDevices);
-            await _context.SaveChangesAsync();
 
-            return new CreatedAtActionResult("GetAllRooms", nameof(RoomModelsController), new { id = roomModel.Id }, roomModel);
+            await _context.SaveChangesAsync();
+            return new OkResult();
         }
         
         public async Task<IActionResult> DeleteRoom(int id)
         {
             var roomModel = await _context.Rooms.FindAsync(id);
             if (roomModel == null)
-            {
                 return new NotFoundResult();
-                //return NotFound();
-            }
 
             _context.Rooms.Remove(roomModel);
             await _context.SaveChangesAsync();
 
-            return new NoContentResult();
-            //return NoContent();
+            return new OkResult();
         }
 
         private bool RoomModelExists(int id)

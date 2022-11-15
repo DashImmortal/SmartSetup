@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartDevice.Data;
 
-namespace SmartDevice.Migrations.Rooms
+namespace SmartDevice.Migrations
 {
-    [DbContext(typeof(RoomsContext))]
-    [Migration("20221114220257_RoomsMigretion")]
-    partial class RoomsMigretion
+    [DbContext(typeof(SmartSetupContext))]
+    partial class SmartSetupContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,6 +27,7 @@ namespace SmartDevice.Migrations.Rooms
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -47,16 +46,20 @@ namespace SmartDevice.Migrations.Rooms
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoomModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoomModelId");
 
-                    b.ToTable("SmartDeviceModel");
+                    b.ToTable("SmartDevices");
                 });
 
             modelBuilder.Entity("SmartDevice.Models.SmartDeviceModel", b =>

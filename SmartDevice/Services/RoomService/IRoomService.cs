@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SmartDevice.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

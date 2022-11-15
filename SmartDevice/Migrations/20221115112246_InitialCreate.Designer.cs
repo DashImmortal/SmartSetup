@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartDevice.Data;
 
-namespace SmartDevice.Migrations.Rooms
+namespace SmartDevice.Migrations
 {
-    [DbContext(typeof(RoomsContext))]
-    [Migration("20221114213043_MyMigration")]
-    partial class MyMigration
+    [DbContext(typeof(SmartSetupContext))]
+    [Migration("20221115112246_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,6 +29,7 @@ namespace SmartDevice.Migrations.Rooms
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -47,16 +48,20 @@ namespace SmartDevice.Migrations.Rooms
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoomModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoomModelId");
 
-                    b.ToTable("SmartDeviceModel");
+                    b.ToTable("SmartDevices");
                 });
 
             modelBuilder.Entity("SmartDevice.Models.SmartDeviceModel", b =>

@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
-using SmartDevice.Interfaces;
+﻿using SmartDevice.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SmartDevice.Models
 {
@@ -8,7 +9,15 @@ namespace SmartDevice.Models
     {
         [SwaggerSchema(ReadOnly = true)]
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public bool IsOn { get; set; } = false;
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        [SwaggerSchema(ReadOnly = true)]
+        [EnumDataType(typeof(SmartObjectType))]
+        public SmartObjectType Type { get; set; }
+        [Required]
+        public bool IsOn { get; set; }
+        [JsonIgnore]
+        public virtual RoomModel RoomModel { get; set; }
     }
 }
